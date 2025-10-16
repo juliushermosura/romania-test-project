@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { component } from '@pionjs/pion';
 
-function ShoppingContainer() {
+function ShoppingContainer({ items = [] }) {
   function handlePrint() {
     const printWindow = window.open('', '', 'width=600,height=400');
     printWindow.document.write(`
@@ -29,8 +29,7 @@ function ShoppingContainer() {
     <div class="shopping-container">
       <h2>Shopping List</h2>
       <ul>
-        <li>Tequila</li>
-        <li>Lime juice</li>
+        ${items.length === 0 ? html`<li>No items yet.</li>` : items.map(item => html`<li>${item}</li>`)}
       </ul>
       <button @click="${handlePrint}">Print</button>
     </div>
