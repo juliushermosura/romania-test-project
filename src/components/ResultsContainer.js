@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { component, useState, useEffect } from '@pionjs/pion';
 
-function ResultsContainer({ query = "margarita" }) {
+function ResultsContainer({ query = "margarita", showResults = true }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -85,7 +85,7 @@ function ResultsContainer({ query = "margarita" }) {
       }
     </style>
     <div class="results-container">
-      ${loading ? html`<p>Loading...</p>` : results.length === 0 ? html`<p>No results found.</p>` : results.map(drink => html`
+      ${loading ? html`<p>Loading...</p>` : !showResults ? '' : results.length === 0 ? html`<p>No results found.</p>` : results.map(drink => html`
         <div class="card">
           <img class="card-image" src="${drink.strDrinkThumb || '/img/marga.jpg'}" alt="${drink.strDrink}" />
           <div class="card-content">

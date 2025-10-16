@@ -8,30 +8,39 @@ function CocktailApp() {
   const [query, setQuery] = useState('margarita');
   const [toasterMsg, setToasterMsg] = useState('');
   const [showToaster, setShowToaster] = useState(false);
+  const [resultsReady, setResultsReady] = useState(false);
 
   useEffect(() => {
     function handleSearchEvent(e) {
       setQuery(e.detail.query);
       setToasterMsg('Searching...');
       setShowToaster(true);
+      setResultsReady(false);
     }
     document.addEventListener('cocktail-search', handleSearchEvent);
     return () => document.removeEventListener('cocktail-search', handleSearchEvent);
   }, []);
 
   useEffect(() => {
-    function handleResultsEvent(e) { 
+    function handleResultsEvent(e) {
       if (e.detail.loading) {
         setToasterMsg('Searching...');
         setShowToaster(true);
+        setResultsReady(false);
       } else if (e.detail.results === 0) {
-        setToasterMsg('No results found.');
-        setShowToaster(true);
-        setTimeout(() => setShowToaster(false), 2000);
+        setTimeout(() => {
+          setToasterMsg('No results found.');
+          setShowToaster(true);
+          setResultsReady(true);
+          setTimeout(() => setShowToaster(false), 2000);
+        }, 3000);
       } else {
-        setToasterMsg('Here are the results.');
-        setShowToaster(true);
-        setTimeout(() => setShowToaster(false), 2000);
+        setTimeout(() => {
+          setToasterMsg('Here are the results.');
+          setShowToaster(true);
+          setResultsReady(true);
+          setTimeout(() => setShowToaster(false), 2000);
+        }, 3000);
       }
     }
     document.addEventListener('cocktail-results', handleResultsEvent);
@@ -41,7 +50,7 @@ function CocktailApp() {
   return html`
     <cocktail-search></cocktail-search>
     <div class="app-container" style="display: flex;">
-      <results-container .query="${query}" style="flex: 3; border: 1px solid #ccc; padding: 16px; background: #fff;"></results-container>
+      <results-container .query="${query}" .showResults="${resultsReady}" style="flex: 3; border: 1px solid #ccc; padding: 16px; background: #fff;"></results-container>
       <shopping-container style="flex: 1; border: 1px solid #ccc; padding: 16px; background: #fff;"></shopping-container>
     </div>
     ${showToaster && toasterMsg ? html`
