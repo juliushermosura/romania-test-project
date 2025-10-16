@@ -20,6 +20,9 @@ function ResultsContainer({ query = "margarita", showResults = true, onAddIngred
         setLoading(false);
         document.dispatchEvent(new CustomEvent('cocktail-results', { detail: { loading: false, results: 0 } }));
       });
+      const handleAdd = () => {
+        onAddIngredients?.(cocktail.ingredients);
+      };
   }, [query]);
 
   return html`

@@ -56,7 +56,8 @@ function CocktailApp() {
   return html`
     <cocktail-search></cocktail-search>
     <div class="app-container" style="display: flex;">
-  <results-container .query="${query}" .showResults="${resultsReady}" .onAddIngredients="${ingredients => setShoppingList(prev => Array.from(new Set([...prev, ...ingredients])))}" style="flex: 3; border: 1px solid #ccc; padding: 16px; background: #fff;"></results-container>
+  <results-container .query="${query}" .showResults="${resultsReady}" .onAddIngredients="${ingredients => {setShoppingList(prev => Array.from(new Set([...prev, ...ingredients]))); setToasterMsg('Ingredients added to shopping list.'); setShowToaster(true); setTimeout(() => setShowToaster(false), 2000);
+}}" style="flex: 3; border: 1px solid #ccc; padding: 16px; background: #fff;"></results-container>
   <shopping-container .items="${shoppingList}" style="flex: 1; border: 1px solid #ccc; padding: 16px; background: #fff;"></shopping-container>
     </div>
     ${(hasSearched && showToaster && toasterMsg) ? html`
