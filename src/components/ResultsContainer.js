@@ -85,18 +85,34 @@ function ResultsContainer({ query = "margarita", showResults = true }) {
       }
     </style>
     <div class="results-container">
-      ${loading ? html`<p>Loading...</p>` : !showResults ? '' : results.length === 0 ? html`<p>No results found.</p>` : results.map(drink => html`
-        <div class="card">
-          <img class="card-image" src="${drink.strDrinkThumb || '/img/marga.jpg'}" alt="${drink.strDrink}" />
-          <div class="card-content">
-            <div>
-              <div class="card-title">${drink.strDrink}</div>
-              <div class="card-desc">${drink.strInstructions || 'No description available.'}</div>
+      ${loading ? html`<p>Loading...</p>` : !showResults ? '' : results.length === 0 ? html`<p>No results found.</p>` : results.map(drink => {
+        const ingredients = [];
+        for (let i = 1; i <= 15; i++) {
+          const ingredient = drink[`strIngredient${i}`];
+          const measure = drink[`strMeasure${i}`];
+          if (ingredient) {
+            ingredients.push(measure ? `${measure.trim()} ${ingredient}` : ingredient);
+          }
+        }
+        return html`
+          <div class="card">
+            <img class="card-image" src="${drink.strDrinkThumb || '/img/marga.jpg'}" alt="${drink.strDrink}" />
+            <div class="card-content">
+              <div>
+                <div class="card-title">${drink.strDrink}</div>
+                <div class="card-desc">${drink.strInstructions || 'No description available.'}</div>
+                <div class="card-ingredients">
+                  <strong>Ingredients:</strong>
+                  <ul>
+                    ${ingredients.map(item => html`<li>${item}</li>`)}
+                  </ul>
+                </div>
+              </div>
             </div>
+            <button class="card-add-btn">+</button>
           </div>
-          <button class="card-add-btn">+</button>
-        </div>
-      `)}
+        `;
+      })}
     </div>
   `;
 }
