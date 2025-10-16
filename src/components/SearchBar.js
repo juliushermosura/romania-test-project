@@ -1,7 +1,25 @@
 import { html } from 'lit';
-import { component } from '@pionjs/pion';
+import { useState, component } from '@pionjs/pion';
 
-function CocktailSearch() {
+function CocktailSearch({ onSearch }) {
+  const [input, setInput] = useState('margarita');
+
+  function handleInput(e) {
+    setInput(e.target.value);
+  }
+
+  function handleSearch() {
+    if (onSearch) onSearch(input);
+    const event = new CustomEvent('cocktail-search', { detail: { query: input } });
+    document.dispatchEvent(event);
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  }
+
   return html`
     <style>
       .search-bar {
@@ -21,8 +39,8 @@ function CocktailSearch() {
       }
     </style>
     <div class="search-bar">
-      <input type="text" placeholder="Margarita" />
-      <button>Search</button>
+  <input type="text" placeholder="Margarita" .value="${input}" @input="${handleInput}" @keydown="${handleKeyDown}" />
+      <button @click="${handleSearch}">Search</button>
     </div>`;
 }
 
