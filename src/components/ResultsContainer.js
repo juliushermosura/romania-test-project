@@ -7,15 +7,18 @@ function ResultsContainer({ query = "margarita" }) {
 
   useEffect(() => {
     setLoading(true);
+    document.dispatchEvent(new CustomEvent('cocktail-results', { detail: { loading: true } }));
     fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${encodeURIComponent(query)}`)
       .then(res => res.json())
       .then(data => {
         setResults(data.drinks || []);
         setLoading(false);
+        document.dispatchEvent(new CustomEvent('cocktail-results', { detail: { loading: false, results: (data.drinks ? data.drinks.length : 0) } }));
       })
       .catch(() => {
         setResults([]);
         setLoading(false);
+        document.dispatchEvent(new CustomEvent('cocktail-results', { detail: { loading: false, results: 0 } }));
       });
   }, [query]);
 
