@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { component } from '@pionjs/pion';
 
-function ShoppingContainer({ items = [] }) {
+function ShoppingContainer({ items = [], onRemoveItem }) {
     function handlePrint() {
       const printWindow = window.open('', '', 'width=600,height=400');
       printWindow.document.write(`
@@ -28,7 +28,15 @@ function ShoppingContainer({ items = [] }) {
     <div class="shopping-container">
       <h2>Shopping List</h2>
       <ul>
-        ${items.length === 0 ? html`<li>No items yet.</li>` : items.map(item => html`<li>${item}</li>`)}
+        ${items.length === 0
+          ? html`<li>No items yet.</li>`
+          : items.map(item => html`
+              <li class="shopping-item">
+                <span>${item}</span>
+                <button class="remove-btn" @click=${() => onRemoveItem?.(item)}>–</button>
+              </li>
+            `)}
+        
       </ul>
       <button @click="${handlePrint}">Print</button>
     </div>

@@ -12,6 +12,14 @@ function CocktailApp() {
   const [shoppingList, setShoppingList] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
 
+  function handleRemoveItem(itemToRemove) {
+      setShoppingList(prev => prev.filter(item => item !== itemToRemove));
+      setToasterMsg('Ingredient removed from shopping list.');
+      setShowToaster(true);
+      setTimeout(() => setShowToaster(false), 2000);
+  }
+
+
   useEffect(() => {
     function handleSearchEvent(e) {
       const newQuery = e.detail.query;
@@ -58,7 +66,7 @@ function CocktailApp() {
     <div class="app-container" style="display: flex;">
   <results-container .query="${query}" .showResults="${resultsReady}" .onAddIngredients="${ingredients => {setShoppingList(prev => Array.from(new Set([...prev, ...ingredients]))); setToasterMsg('Ingredients added to shopping list.'); setShowToaster(true); setTimeout(() => setShowToaster(false), 2000);
 }}" style="flex: 3; border: 1px solid #ccc; padding: 16px; background: #fff;"></results-container>
-  <shopping-container .items="${shoppingList}" style="flex: 1; border: 1px solid #ccc; padding: 16px; background: #fff;"></shopping-container>
+  <shopping-container .items="${shoppingList}" .onRemoveItem="${handleRemoveItem}" style="flex: 1; border: 1px solid #ccc; padding: 16px; background: #fff;"></shopping-container>
     </div>
     ${(hasSearched && showToaster && toasterMsg) ? html`
       <div style="position: fixed; bottom: 24px; right: 24px; min-width: 200px; background: #333; color: #fff; padding: 12px 24px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); font-size: 1rem; z-index: 1000; opacity: 0; animation: fadeInToaster 0.7s forwards;">
