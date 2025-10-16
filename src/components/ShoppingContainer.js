@@ -2,21 +2,20 @@ import { html } from 'lit';
 import { component } from '@pionjs/pion';
 
 function ShoppingContainer({ items = [] }) {
-  function handlePrint() {
-    const printWindow = window.open('', '', 'width=600,height=400');
-    printWindow.document.write(`
-      <html><head><title>Print Shopping List</title></head><body>
-        <h2>Shopping List</h2>
-        <ul>
-          <li>Tequila</li>
-          <li>Lime juice</li>
-        </ul>
-      </body></html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-  }
+    function handlePrint() {
+      const printWindow = window.open('', '', 'width=600,height=400');
+      printWindow.document.write(`
+        <html><head><title>Print Shopping List</title></head><body>
+          <h2>Shopping List</h2>
+          <ul>
+            ${items.length === 0 ? '<li>No items yet.</li>' : items.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </body></html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+    }
   return html`
     <style>
       .shopping-container {
