@@ -1,7 +1,24 @@
 import { html } from 'lit';
-import { component } from '@pionjs/pion';
+import { component, useState, useEffect } from '@pionjs/pion';
 
-function ResultsContainer() {
+function ResultsContainer({ query = "margarita" }) {
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${encodeURIComponent(query)}`)
+      .then(res => res.json())
+      .then(data => {
+        setResults(data.drinks || []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setResults([]);
+        setLoading(false);
+      });
+  }, [query]);
+
   return html`
     <style>
       .results-container {
@@ -49,7 +66,7 @@ function ResultsContainer() {
         position: absolute;
         bottom: 12px;
         right: 16px;
-        background: steelblue;
+        background: steelbue;
         color: #fff;
         border: none;
         border-radius: 50%;
@@ -61,20 +78,22 @@ function ResultsContainer() {
         transition: background 0.2s;
       }
       .card-add-btn:hover {
-        background: steelblue;
+        background: lightsteelblue;
       }
     </style>
     <div class="results-container">
-      <div class="card">
-  <img class="card-image" src="/img/marga.jpg" alt="Cocktail" />
-        <div class="card-content">
-          <div>
-            <div class="card-title">Margarita</div>
-            <div class="card-desc">Lorem ipsum dolor set arem.</div>
+      ${loading ? html`<p>Loading...</p>` : results.length === 0 ? html`<p>No results found.</p>` : results.map(drink => html`
+        <div class="card">
+          <img class="card-image" src="${drink.strDrinkThumb || '/img/marga.jpg'}" alt="${drink.strDrink}" />
+          <div class="card-content">
+            <div>
+              <div class="card-title">${drink.strDrink}</div>
+              <div class="card-desc">${drink.strInstructions || 'No description available.'}</div>
+            </div>
           </div>
+          <button class="card-add-btn">+</button>
         </div>
-        <button class="card-add-btn">+</button>
-      </div>
+      `)}
     </div>
   `;
 }
