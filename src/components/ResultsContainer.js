@@ -87,13 +87,15 @@ function ResultsContainer({ query = "margarita", showResults = true, onAddIngred
     <div class="results-container">
       ${loading ? html`<p>Loading...</p>` : !showResults ? '' : results.length === 0 ? html`<p>No results found.</p>` : results.map(drink => {
         const ingredients = [];
-          for (let i = 1; i <= 15; i++) {
-            const ingredient = drink[`strIngredient${i}`];
-            const measure = drink[`strMeasure${i}`];
-            if (ingredient) {
-                ingredients.push(measure ? `${measure.trim()} ${ingredient}` : ingredient);
-            }
+        const shoppingIngredients = [];
+        for (let i = 1; i <= 15; i++) {
+          const ingredient = drink[`strIngredient${i}`];
+          const measure = drink[`strMeasure${i}`];
+          if (ingredient) {
+            ingredients.push(measure ? `${measure.trim()} ${ingredient}` : ingredient);
+            shoppingIngredients.push(ingredient);
           }
+        }
         return html`
           <div class="card">
             <img class="card-image" src="${drink.strDrinkThumb || '/img/marga.jpg'}" alt="${drink.strDrink}" />
@@ -109,7 +111,7 @@ function ResultsContainer({ query = "margarita", showResults = true, onAddIngred
                 </div>
               </div>
             </div>
-            <button class="card-add-btn" @click="${() => onAddIngredients && onAddIngredients(ingredients)}">+</button>
+            <button class="card-add-btn" @click="${() => onAddIngredients && onAddIngredients(shoppingIngredients)}">+</button>
           </div>
         `;
       })}
