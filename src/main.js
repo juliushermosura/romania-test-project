@@ -14,15 +14,18 @@ function CocktailApp() {
 
   useEffect(() => {
     function handleSearchEvent(e) {
-      setQuery(e.detail.query);
-      setToasterMsg('Searching...');
-      setShowToaster(true);
-      setResultsReady(false);
+      const newQuery = e.detail.query;
       setHasSearched(true);
+      if (newQuery !== query) {
+        setToasterMsg('Searching...');
+        setShowToaster(true);
+        setQuery(newQuery);
+        setResultsReady(false);
+      }
     }
     document.addEventListener('cocktail-search', handleSearchEvent);
     return () => document.removeEventListener('cocktail-search', handleSearchEvent);
-  }, []);
+  }, [query]);
 
   useEffect(() => {
     function handleResultsEvent(e) {
